@@ -3,7 +3,9 @@ version: 0.1
 runson: mac
 
 autosplit: true
-concurrency: 4
+concurrency: 1
+env:
+    hub: "${HUB_URL}"
 
 runtime:
   language: java
@@ -18,12 +20,10 @@ pre:
 
 testDiscovery:
   type: raw
-  mode: dynamic
+  mode: static
   command: grep 'test name' xml/testng_mac.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/>//g'
 
 testRunnerCommand: mvn test -Dplatname=mac -Dmaven.repo.local=./.m2 dependency:resolve -DselectedTests=$test
 
-retryOnFailure: true
-maxRetries: 1
 
 jobLabel: [selenium-testng, mac, v1, autosplit]
