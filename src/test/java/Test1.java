@@ -3,10 +3,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.*;
 
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.reporter.ExtentSparkReporter;
-import com.aventstack.extentreports.reporter.JsonFormatter;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -14,18 +10,15 @@ public class Test1
 {
     RemoteWebDriver driver = null;
     public static String status = "passed";
-    public static String username = System.getenv("LT_USERNAME");
+    public static String username = System.getenv("gitLT_USERNAME");
     public static String access_key = System.getenv("LT_ACCESS_KEY");
     public static String hub_url = System.getenv("hub") + "/wd/hub"; // Stage=@lambdatestinternal.com, Prod=@lambdatest.com
-
-    ExtentSparkReporter spark = new ExtentSparkReporter("target/surefire-reports/html/extentReport.html");
-    JsonFormatter json = new JsonFormatter("target/surefire-reports/json/Extent_Report.json");
-    ExtentReports extent = new ExtentReports();
 
 
     String accessibilityCompliance = "https://ltqa-frontend.lambdatestinternal.com/accessibility-compliance";
     String partialAccessibilityCompliance = "https://ltqa-frontend.lambdatestinternal.com/partial-accessibility-compliance";
     String accessibilityUnCompliance = "https://ltqa-frontend.lambdatestinternal.com/accessibility-uncompliance";
+    
     @BeforeMethod
     @Parameters(value={"browser","version","platform", "resolution"})
     public void testSetUp(String browser, String version, String platform, String resolution) throws Exception
