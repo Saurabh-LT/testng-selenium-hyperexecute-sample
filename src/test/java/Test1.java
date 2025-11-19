@@ -12,6 +12,7 @@ public class Test1
     public static String status = "passed";
     public static String username = System.getenv("LT_USERNAME");
     public static String access_key = System.getenv("LT_ACCESS_KEY");
+    public static String environment = System.getenv("LT_ENV");
 
     String accessibilityCompliance = "https://ltqa-frontend.lambdatestinternal.com/accessibility-compliance";
     String partialAccessibilityCompliance = "https://ltqa-frontend.lambdatestinternal.com/partial-accessibility-compliance";
@@ -44,7 +45,10 @@ public class Test1
 
         try
         {
-            driver = new RemoteWebDriver(new URL("https://" + username + ":" + access_key + "@hub.lambdatest.com/wd/hub"), capabilities);
+            if (environment.equalsIgnoreCase("prod"))
+                driver = new RemoteWebDriver(new URL("https://" + username + ":" + access_key + "@hub.lambdatest.com/wd/hub"), capabilities);
+            else
+                driver = new RemoteWebDriver(new URL("https://" + username + ":" + access_key + "@stage-hub.lambdatestinternal.com/wd/hub"), capabilities);
         }
         catch (MalformedURLException e)
         {
