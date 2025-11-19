@@ -10,10 +10,8 @@ public class Test1
 {
     RemoteWebDriver driver = null;
     public static String status = "passed";
-    public static String username = System.getenv("gitLT_USERNAME");
+    public static String username = System.getenv("LT_USERNAME");
     public static String access_key = System.getenv("LT_ACCESS_KEY");
-    public static String hub_url = System.getenv("hub") + "/wd/hub"; // Stage=@lambdatestinternal.com, Prod=@lambdatest.com
-
 
     String accessibilityCompliance = "https://ltqa-frontend.lambdatestinternal.com/accessibility-compliance";
     String partialAccessibilityCompliance = "https://ltqa-frontend.lambdatestinternal.com/partial-accessibility-compliance";
@@ -37,17 +35,16 @@ public class Test1
         capabilities.setCapability("console",true);
         capabilities.setCapability("visual",true);
         capabilities.setCapability("selenium_version", "4.24.0");
-        
 
         // accessibility related capabilities
         capabilities.setCapability("accessibility", true); // Enable accessibility testing
         capabilities.setCapability("accessibility.wcagVersion", "wcag21a"); // Specify WCAG version (e.g., WCAG 2.1 Level A)
-        capabilities.setCapability("accessibility.bestPractice", false); // Exclude best practice issues from results
+        capabilities.setCapability("accessibility.bestPractice", true); // Exclude best practice issues from results
         capabilities.setCapability("accessibility.needsReview", true); // Include issues that need review
 
         try
         {
-            driver = new RemoteWebDriver(new URL("https://" + username + ":" + access_key + hub_url), capabilities);
+            driver = new RemoteWebDriver(new URL("https://" + username + ":" + access_key + "@hub.lambdatest.com/wd/hub"), capabilities);
         }
         catch (MalformedURLException e)
         {
