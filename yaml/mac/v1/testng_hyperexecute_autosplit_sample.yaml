@@ -5,6 +5,7 @@ runson: mac
 autosplit: true
 concurrency: 1
 env:
+    LT_ENV: ${LT_ENV}
     hub: "${HUB_URL}"
 
 runtime:
