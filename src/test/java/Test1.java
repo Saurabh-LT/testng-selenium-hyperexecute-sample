@@ -27,7 +27,7 @@ public class Test1
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         capabilities.setCapability("build", "Testing Accessibility using HyperExecute");
-        capabilities.setCapability("name", "Testing Accessibility using HyperExecute");
+        capabilities.setCapability("name", "A11y on Selenium");
         capabilities.setCapability("platform", platformName);
         capabilities.setCapability("browserName", browser);
         capabilities.setCapability("version", version);
