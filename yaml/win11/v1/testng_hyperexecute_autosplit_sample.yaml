@@ -1,6 +1,6 @@
 ---
 version: 0.1
-runson: mac
+runson: win11
 
 autosplit: true
 concurrency: 1
@@ -22,9 +22,9 @@ pre:
 testDiscovery:
   type: raw
   mode: static
-  command: grep 'test name' xml/testng_mac.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/>//g'
+  command: grep 'test name' xml/testng_win11.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/\x3e//g'
 
-testRunnerCommand: mvn test -Dplatname=mac -Dmaven.repo.local=./.m2 dependency:resolve -DselectedTests=$test
+testRunnerCommand: mvn test `-Dplatname=win11 `-Dmaven.repo.local=./.m2 dependency:resolve `-DselectedTests=$test
 
 
-jobLabel: [selenium-testng, mac, v1, autosplit]
+jobLabel: [selenium-testng, win11, v1, autosplit]
