@@ -27,15 +27,15 @@ cacheDirectories:
 pre:
   - mvn -Dmaven.repo.local=./.m2 dependency:resolve
 
-# Per-OS test discovery (hybrid mode). win uses the Windows-shell hex escape
-# (\x3e) for '>'; mac/linux use plain bash sed.
+# Discovery extracts the test name from the suite xml. Use a capture-group
+# sed (no '>' literal/hex anywhere) so it is portable across BSD sed (mac),
+# GNU sed (linux), and the Windows discovery shell. Test names are identical
+# across the per-OS suite xmls, so one xml is enough; the runner selects the
+# right suite per OS via -Dplatname (pom: xml/testng_${platname}.xml).
 testDiscovery:
   type: raw
   mode: dynamic
-  command: grep 'test name' xml/testng_win.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/\x3e//g'
-  macCommand: grep 'test name' xml/testng_mac.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/>//g'
-  winCommand: grep 'test name' xml/testng_win.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/\x3e//g'
-  linuxCommand: grep 'test name' xml/testng_linux.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/>//g'
+  command: grep 'test name' xml/testng_mac.xml | sed -E 's/.*name="([^"]+)".*/\1/'
 
 # Per-OS runner. win keeps PowerShell backtick escaping; mac/linux are plain bash.
 macTestRunnerCommand: mvn test -Dplatname=mac -Dmaven.repo.local=./.m2 dependency:resolve -DselectedTests=$test
