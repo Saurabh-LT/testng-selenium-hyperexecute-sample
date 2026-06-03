@@ -1,0 +1,48 @@
+---
+version: 0.1
+globalTimeout: 150
+testSuiteTimeout: 150
+testSuiteStep: 150
+
+runson: ${matrix.os}
+autosplit: true
+concurrency: 1
+parallelism: 1
+
+matrix:
+  os: [mac, win, linux]
+
+env:
+  LT_ENV: ${LT_ENV}
+  hub: "${HUB_URL}"
+
+runtime:
+  language: java
+  version: 11
+
+cacheKey: '{{ checksum "pom.xml" }}'
+cacheDirectories:
+  - .m2
+
+pre:
+  - mvn -Dmaven.repo.local=./.m2 dependency:resolve
+
+# Per-OS test discovery (hybrid mode). win uses the Windows-shell hex escape
+# (\x3e) for '>'; mac/linux use plain bash sed.
+testDiscovery:
+  type: raw
+  mode: dynamic
+  command: grep 'test name' xml/testng_win.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/\x3e//g'
+  macCommand: grep 'test name' xml/testng_mac.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/>//g'
+  winCommand: grep 'test name' xml/testng_win.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/\x3e//g'
+  linuxCommand: grep 'test name' xml/testng_linux.xml | awk '{print$2}' | sed 's/name=//g' | sed 's/>//g'
+
+# Per-OS runner. win keeps PowerShell backtick escaping; mac/linux are plain bash.
+macTestRunnerCommand: mvn test -Dplatname=mac -Dmaven.repo.local=./.m2 dependency:resolve -DselectedTests=$test
+winTestRunnerCommand: mvn test `-Dplatname=win `-Dmaven.repo.local=./.m2 dependency:resolve `-DselectedTests=$test
+linuxTestRunnerCommand: mvn test -Dplatname=linux -Dmaven.repo.local=./.m2 dependency:resolve -DselectedTests=$test
+
+retryOnFailure: true
+maxRetries: 1
+
+jobLabel: [selenium-testng, all os, hybrid, autosplit]
